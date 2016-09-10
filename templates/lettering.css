@@ -10,25 +10,19 @@ Released   : 20120513
 */
 
 body {
-    background-image: url(http://www.freecsstemplates.org/previews/lettering/images/img01.jpg);
-}
-
-@font-face {
-  font-family: 'Arvo';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Arvo'), url(http://themes.googleusercontent.com/static/fonts/arvo/v5/WJ6D195CfbTRlIs49IbkFw.woff) format('woff');
+    background-color:#888;
 }
 
 article {
     margin: 0 auto;
     padding: 0;
     display:block;
-    font-family: 'Arvo', serif;
+    font-family: 'Roboto', sans-serif;
+    font-weight:100;
     font-size: 13px;
-    color: #3E3B36;   
+    color: #333;   
     overflow: hidden;
-    width: 920px;
+    width: 900px;
     padding: 20px 40px 20px 40px;
 }
 
@@ -41,27 +35,39 @@ footer {
 
 nav {
     float: left;
-    width: 280px;
+    width: 220px;
     margin: 0px;
     padding: 0px 0px 80px 10px;
     color: white;
     display: block;
+    word-wrap: break-word;
 }
 nav ul {
     list-style: none;
 }
 
+nav h1 a {
+    color:white;
+    font-size:1.5rem;
+    font-weight:400;
+    text-decoration:none;
+}
+
 nav h2 a {
     color:white;
+    font-size:1.2rem;
+    font-weight:200;
     text-decoration:none;
+}
+
+nav ul {
+    padding-left:20px;
 }
 
 nav li a {
     display: block;
-    width: 260px;
-    height: 20px;
-    margin: 3px 0px;
-    padding: 5px 0px 6px 12px;
+    width: 300px;
+/*    padding: 5px 0px 6px 12px;*/
     text-align: left;
     text-decoration: none;
     text-transform: capitalize;
@@ -71,12 +77,12 @@ nav li a {
     color:white;
 }
 nav li a:hover {
-    background: #561924;
+    background: #666;
     text-decoration: none;
 }
 
 #logo {
-    width: 280px;
+    width: 220px;
     height: 140px;
     margin: 0;
     padding: 0;
@@ -86,17 +92,17 @@ nav li a:hover {
 #logo h1 {
     margin: 0;
     padding: 20px 0px 0px 0px;
-    font-size: 50px;
+    font-size: 2rem;
     font-weight:normal;
 }
 
 #logo p, #logo h1 sup {
     margin: 0px;
-    font-size: 20px;
+    font-size: 1rem;
     line-height:120%;
 }
 #logo p {
-    color: #E0B1B9;
+    color: #eee;
 }
 
 #logo h1, #logo p {
@@ -105,7 +111,8 @@ nav li a:hover {
     letter-spacing: 0px;
     text-align: center;
     text-transform: lowercase;
-    font-family: Georgia, "Times New Roman", Times, serif;
+    font-family: 'Roboto', sans-serif;
+    font-weight:400;
 }
 
 #content {
@@ -119,7 +126,7 @@ nav li a:hover {
 
 #content section {
     margin-top:30px;
-    margin-bottom:60px;
+    margin-bottom:40px;
 }
 /*
 #content section h2 {
@@ -154,11 +161,10 @@ td.datatype {
 
 p.brief {
     overflow: hidden;
-    background: url(http://www.freecsstemplates.org/previews/lettering/images/img03.png) no-repeat left top;
     margin-bottom: 30px;
     padding: 5px 10px 5px 30px;
     text-align: left;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 13px;
     font-weight: bold;
     color: white;
@@ -183,10 +189,6 @@ footer p {
     font-size: 14px;
     text-align: center;
     color: white;
-}
-
-footer p::after {
-    content: " Design by freecsstemplates.org. Background by fotogrph.com.";
 }
 
 footer a {
