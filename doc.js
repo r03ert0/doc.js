@@ -458,7 +458,7 @@ DOCJS.Generate = function(urls,opt){
     
 
     // Assembles Entity's out of Block's
-    function makeEntities(blocks,errors){
+    function makeEntities(multiBlocks,errors){
 	var doc = new DOCJS.Documentation();
 
 	// Add errors to the doc
@@ -466,115 +466,118 @@ DOCJS.Generate = function(urls,opt){
 	    doc.errors.push(errors[i]);
 
 	// Assemble Entities
-	for(var i=0; i<blocks.length; i++){
-	    var entity, block = blocks[i];
+	for(var mb=0;mb<multiBlocks.length;mb++) {
+	    var blocks=multiBlocks[mb];
+        for(var i=0; i<blocks.length; i++){
+            var entity, block = blocks[i];
 
-	    // Find block type
-	    if(block.page.length){ // Page
-		// May only contain 1 @page command
-		var pageCommand = block.page[0];
-		var lines = block.getUnparsedLines2();
-		var lines_array = [];
-		for(var lineNumber in lines){
-		    var line = lines[lineNumber];
-		    lines_array.push(line);
-		    block.markLineAsParsed(lineNumber);
-		}
-		var content = lines_array.join("\n");
-		entity = new DOCJS.PageEntity([block],pageCommand,content);
-		doc.pages.push(entity);
-		
-	    } else if(block.classs.length){ // Class
-		if(block.ret.length)
-		    doc.errors.push(new DOCJS.ErrorReport(block.filename,
-							  block.lineNumber,
-							  "@class blocks may not contain @return"));
+            // Find block type
+            if(block.page.length){ // Page
+            // May only contain 1 @page command
+            var pageCommand = block.page[0];
+            var lines = block.getUnparsedLines2();
+            var lines_array = [];
+            for(var lineNumber in lines){
+                var line = lines[lineNumber];
+                lines_array.push(line);
+                block.markLineAsParsed(lineNumber);
+            }
+            var content = lines_array.join("\n");
+            entity = new DOCJS.PageEntity([block],pageCommand,content);
+            doc.pages.push(entity);
+        
+            } else if(block.classs.length){ // Class
+            if(block.ret.length)
+                doc.errors.push(new DOCJS.ErrorReport(block.filename,
+                                  block.lineNumber,
+                                  "@class blocks may not contain @return"));
 
-		// May only contain 1 @class command
-		var entity = new DOCJS.ClassEntity([block],
-						   block.classs[0],
-						   block.param,
-						   block.extends[0],
-						   block.brief[0],
-						   block.desc[0],
-						   block.example);
-		doc.classes.push(entity);
+            // May only contain 1 @class command
+            var entity = new DOCJS.ClassEntity([block],
+                               block.classs[0],
+                               block.param,
+                               block.extends[0],
+                               block.brief[0],
+                               block.desc[0],
+                               block.example);
+            doc.classes.push(entity);
 
-	    } else if(block.file.length){ // File
+            } else if(block.file.length){ // File
 
-	    } else if(block.library.length){ // Library
+            } else if(block.library.length){ // Library
 
-		entity = new DOCJS.LibraryEntity([block],
-						 block.library[0],
-						 block.version[0],
-						 block.brief[0],
-						 block.desc[0]);
-		doc.library = entity;
+            entity = new DOCJS.LibraryEntity([block],
+                             block.library[0],
+                             block.version[0],
+                             block.brief[0],
+                             block.desc[0]);
+            doc.library = entity;
 
-	    } else if(block.func.length){ // Function
-		entity = new DOCJS.FunctionEntity([block],
-						  block.func[0],
-						  block.param,
-						  block.ret[0],
-						  block.brief[0],
-						  block.desc[0],
-						  block.example);
-		doc.functions.push(entity);
+            } else if(block.func.length){ // Function
+            entity = new DOCJS.FunctionEntity([block],
+                              block.func[0],
+                              block.param,
+                              block.ret[0],
+                              block.brief[0],
+                              block.desc[0],
+                              block.example);
+            doc.functions.push(entity);
 
-	    } else if(block.method.length){ // Method
-		if(block.memberof.length==1){
-		    entity = new MethodEntity([block],
-					      block.method[0],
-					      block.memberof[0],
-					      block.param,
-					      block.brief[0],
-					      block.ret[0]);
-		    doc.methods.push(entity);
-		}
+            } else if(block.method.length){ // Method
+            if(block.memberof.length==1){
+                entity = new MethodEntity([block],
+                              block.method[0],
+                              block.memberof[0],
+                              block.param,
+                              block.brief[0],
+                              block.ret[0]);
+                doc.methods.push(entity);
+            }
 
-		
-	    } else if(block.property.length){ // Property
-		if(block.memberof.length!=1)
-		    doc.errors.push(new DOCJS.ErrorReport(block.filename,
-						    block.lineNumber,
-						    "A @property block requires exactly 1 @memberof command, got "+block.memberof.length+"."));
-		else {
-		    entity = new PropertyEntity([block],
-						block.property[0],
-						block.memberof[0],
-						block.brief[0],
-						block.desc[0]);
-		    doc.properties.push(entity);
-		}
-	    }
-		
-	    // Check for todos
-	    if(block.todo.length){
-		for(var j=0; j<block.todo.length; j++){
-		    var todo = new DOCJS.TodoEntity([block],block.todo[j]);
-		    doc.todos.push(todo);
-		    todo.setEntity(entity);
-		}
-	    }
+        
+            } else if(block.property.length){ // Property
+            if(block.memberof.length!=1)
+                doc.errors.push(new DOCJS.ErrorReport(block.filename,
+                                block.lineNumber,
+                                "A @property block requires exactly 1 @memberof command, got "+block.memberof.length+"."));
+            else {
+                entity = new PropertyEntity([block],
+                            block.property[0],
+                            block.memberof[0],
+                            block.brief[0],
+                            block.desc[0]);
+                doc.properties.push(entity);
+            }
+            }
+        
+            // Check for todos
+            if(block.todo.length){
+            for(var j=0; j<block.todo.length; j++){
+                var todo = new DOCJS.TodoEntity([block],block.todo[j]);
+                doc.todos.push(todo);
+                todo.setEntity(entity);
+            }
+            }
 
-	    // Make error for unparsed code
-	    var unparsed = block.getUnparsedLines2(true);
-	    var count = 0;
-	    for (var k in unparsed) {
-		if (unparsed.hasOwnProperty(k)){
-		    ++count;
-		    break;
-		}
-	    }
-	    if(count){
-		var message = "There was unparsed code:\n\n";
-		for(var j in unparsed){
-		    message += "Line "+j+": "+unparsed[j]+"\n";
-		}
-		doc.errors.push(new DOCJS.ErrorReport(block.filename,
-						      block.lineNumber,
-						      message));
-	    }
+            // Make error for unparsed code
+            var unparsed = block.getUnparsedLines2(true);
+            var count = 0;
+            for (var k in unparsed) {
+            if (unparsed.hasOwnProperty(k)){
+                ++count;
+                break;
+            }
+            }
+            if(count){
+            var message = "There was unparsed code:\n\n";
+            for(var j in unparsed){
+                message += "Line "+j+": "+unparsed[j]+"\n";
+            }
+            doc.errors.push(new DOCJS.ErrorReport(block.filename,
+                                  block.lineNumber,
+                                  message));
+            }
+        }
 	}
 
 	doc.update();
@@ -1627,6 +1630,7 @@ DOCJS.Generate = function(urls,opt){
     function loadBlocks(urls,callback){
 	// Get the files
 	var numLoaded = 0;
+	var blocks = [];
 	var errors = [];
 	for(var i=0; i<urls.length; i++){
 	    var file = urls[i];
@@ -1635,10 +1639,11 @@ DOCJS.Generate = function(urls,opt){
 		dataType:'text',
 		async:true,
 		success:function(data){
-		    var blocks = parseBlocks(data,file,errors);
+		    console.log("load block");
+		    blocks.push(parseBlocks(data,file,errors));
 		    numLoaded++;
 		    if(numLoaded==urls.length)
-			callback(blocks,errors);
+			    callback(blocks,errors);
 		},
 		error:function(){
 		    // todo
